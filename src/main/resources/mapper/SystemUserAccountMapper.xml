@@ -1,0 +1,42 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.SystemUserAccountDAO">
+    <resultMap type="com.wechat.entity.SystemUserAccount" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="menu_name" property="menuName"/>
+        <!--column为数据库表的属性，property为类的属性-->
+        <result column="user_id" property="userId"/>
+        <result column="account_id" property="accountId"/>
+    </resultMap>
+    <insert id="addSystemUserAccount" parameterType="com.wechat.entity.SystemUserAccount" useGeneratedKeys="true" keyProperty="id">
+        insert into user_account (user_id,account_id)
+        values(#{userId},#{accountId});
+    </insert>
+    <select id="allSystemUserIdById"  resultType="java.lang.Integer" parameterType="java.lang.Integer">
+       SELECT SECOND.user_id
+       FROM user_account FIRST,user_account SECOND
+       WHERE FIRST.user_id=#{userId}
+       AND FIRST.account_id=SECOND.account_id;
+    </select>
+    <select id="systemUserIdByAccountId"  resultType="java.lang.Integer" parameterType="java.lang.Integer">
+       SELECT user_id
+       FROM user_account
+       WHERE user_account.account_id=#{accountId};
+    </select>
+    <select id="accountIdByUserId"  resultType="java.lang.Integer" parameterType="java.lang.Integer">
+       SELECT account_id
+       FROM user_account
+       WHERE user_account.user_id=#{userId};
+    </select>
+    <delete id="deleteByAccountId" parameterType="java.lang.Integer">
+        DELETE FROM user_account WHERE account_id=#{accountId};
+    </delete>
+    <delete id="deleteByUserId" parameterType="java.lang.Integer">
+        DELETE FROM user_account WHERE user_id=#{userId};
+    </delete>
+    <delete id="deleteSystemUserAccount" parameterType="com.wechat.entity.SystemUserAccount">
+        DELETE FROM user_account WHERE user_id=#{userId} and account_id=#{accountId};
+    </delete>
+</mapper>

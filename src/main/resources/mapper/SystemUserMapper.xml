@@ -1,0 +1,78 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.SystemUserDAO">
+    <resultMap type="com.wechat.entity.SystemUser" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <!--column为数据库表的属性，property为类的属性-->
+        <result column="password" property="password"/>
+        <result column="true_name" property="trueName"/>
+        <result column="sex" property="sex"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="role_id" property="roleID"/>
+        <result column="create_time" property="createTime"/>
+        <association property="role" javaType="com.wechat.entity.Role">
+            <id column="role_id" property="id"/>
+            <result column="role_name" property="roleName"/>
+            <result column="role_describe" property="roleDescribe"/>
+        </association>
+    </resultMap>
+
+    <select id="allSystemUser" resultMap="BaseMap" parameterType="java.lang.Integer">
+ SELECT system_user.* ,system_role.`role_describe`,system_role.`role_name`
+ FROM system_user,system_role,user_account
+ WHERE system_user.`role_id`=system_role.id
+ AND system_user.id=user_account.user_id
+ AND user_account.account_id=#{accountId};
+    </select>
+    <select id="getSystemUserById" resultMap="BaseMap" parameterType="java.lang.Integer">
+ SELECT system_user.* ,system_role.`role_describe`,system_role.`role_name`
+ FROM system_user,system_role
+ WHERE system_user.`role_id`=system_role.id
+ AND system_user.id=#{userId};
+    </select>
+    <select id="selectSystemUser"  resultMap="BaseMap"  parameterType="com.wechat.entity.SystemUser">
+  SELECT system_user.* ,system_role.`id` role_id,system_role.`role_describe`,system_role.`role_name`
+ FROM system_user,system_role
+ WHERE system_user.`role_id`=system_role.id
+ AND username = #{username} and password = #{password};
+    </select>
+    <select id="check"  resultMap="BaseMap"  parameterType="com.wechat.entity.SystemUser">
+        SELECT * from system_user where username = #{username};
+    </select>
+    <select id="search" resultMap="BaseMap">
+    SELECT system_user.* ,system_role.`role_describe`,system_role.`role_name`
+ FROM system_user,system_role,user_account
+ WHERE username LIKE concat(concat('%',#{username}),'%')
+ AND system_user.id=user_account.user_id
+ AND user_account.account_id=#{accountId}
+ AND system_user.`role_id`=system_role.id;
+    </select>
+    <select id="searchAll" resultMap="BaseMap" parameterType="java.lang.String">
+        SELECT * from system_user where username LIKE concat(concat('%',#{username}),'%');
+--     SELECT system_user.* ,system_role.`role_describe`,system_role.`role_name`
+--  FROM system_user,system_role,user_account
+--  WHERE system_user.`role_id`=system_role.id
+    </select>
+    <insert id="addSystemUser" parameterType="com.wechat.entity.SystemUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO system_user (username,password,true_name,sex,phone,email,role_id,create_time)
+        VALUES (#{username},#{password},#{trueName},#{sex},#{phone},#{email},#{roleID},#{createTime});
+    </insert>
+    <delete id="deleteSystemUser" parameterType="com.wechat.entity.SystemUser">
+        DELETE FROM system_user WHERE id=#{id};
+    </delete>
+    <update id="editSystemUser" parameterType="com.wechat.entity.SystemUser">
+        UPDATE system_user
+        SET username=#{username},password=#{password},true_name=#{trueName},sex=#{sex},phone=#{phone},email=#{email},create_time=#{createTime}
+        WHERE id=#{id};
+    </update>
+
+    <update id="editSystemUserpwd" parameterType="com.wechat.entity.SystemUser">
+        UPDATE system_user
+        SET password=#{password}
+        WHERE id=#{id};
+    </update>
+</mapper>

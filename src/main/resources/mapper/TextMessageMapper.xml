@@ -1,0 +1,34 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.TextMessageDAO">
+    <resultMap type="com.wechat.entity.TextMessage" id="BaseMap">
+        <id column="id" property="id"/>
+        <!--<result column="MsgType" property="MsgType"/>-->
+        <!--<result column="InputCode" property="InputCode"/>-->
+        <!--column为数据库表的属性，property为类的属性-->
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="base_id" property="baseID"/>
+        <!--<result column="createTime" property="createTime"/>-->
+    </resultMap>
+
+    <select id="selectTextMessage" resultMap="BaseMap" parameterType="com.wechat.entity.BaseMessage">
+        SELECT * from wechat_message_text t
+		WHERE base_id = #{id};
+    </select>
+    <select id="selectTextMessageByBaseMessageID" resultMap="BaseMap" parameterType="java.lang.Integer">
+        SELECT * from wechat_message_text t
+		WHERE base_id = #{baseMessageID};
+    </select>
+    <insert id="addTextMessage" parameterType="com.wechat.entity.TextMessage"  useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wechat_message_text (title,content,base_id) VALUES (#{title},#{content},#{baseID})
+    </insert>
+    <delete id="deleteTextMessage" parameterType="com.wechat.entity.BaseMessage">
+        DELETE FROM wechat_message_text WHERE base_id=#{id};
+    </delete>
+    <update id="updateTextMessage" parameterType="com.wechat.entity.TextMessage">
+        UPDATE wechat_message_text SET title=#{title},content=#{content} WHERE base_id = #{baseID}
+    </update>
+</mapper>

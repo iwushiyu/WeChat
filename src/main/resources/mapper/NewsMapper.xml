@@ -1,0 +1,58 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.NewsDAO">
+    <resultMap type="com.wechat.entity.News" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="account_name" property="accountName"/>
+        <result column="thumb_id" property="thumbId"/>
+        <result column="media_id" property="mediaId"/>
+        <result column="author" property="author"/>
+        <result column="digest" property="digest"/>
+        <result column="show_cover_pic" property="showCoverPic"/>
+        <result column="content" property="content"/>
+        <result column="content_source_url" property="contentSourceUrl"/>
+        <result column="create_time" property="createTime"/>
+        <association property="thumb" javaType="com.wechat.entity.Thumb">
+            <id column="thumb_id" property="id"/>
+            <result column="thumb_media_id" property="mediaId"/>
+            <result column="thumb_url" property="thumbURL"/>
+            <result column="thumb_name" property="thumbName"/>
+            <result column="img_url" property="imgURL"/>
+        </association>
+    </resultMap>
+
+    <select id="selectAllNews" resultMap="BaseMap"  parameterType="java.lang.String">
+          SELECT news.*,thumb.`thumb_name`,thumb.`thumb_url`,thumb.`media_id` thumb_media_id,thumb.`img_url`
+        FROM wechat_material_news news
+        LEFT JOIN wechat_material_thumb thumb
+        ON news.`thumb_id`=thumb.`id`
+        WHERE news.`account_name`=#{accountName};
+    </select>
+    <select id="selectNewsByNewsID" resultMap="BaseMap"  parameterType="java.lang.Integer">
+        SELECT news.*,thumb.`thumb_name`,thumb.`thumb_url`,thumb.`media_id` thumb_media_id,thumb.`img_url`
+        FROM wechat_material_news news
+        LEFT JOIN wechat_material_thumb thumb
+        ON news.`thumb_id`=thumb.`id`
+         WHERE news.id=#{newsId};
+    </select>
+    <update id="editNews" parameterType="com.wechat.entity.News">
+        UPDATE wechat_material_news
+        SET title=#{title},account_name=#{accountName},thumb_id=#{thumbId},media_id=#{mediaId},author=#{author},digest=#{digest},show_cover_pic=#{showCoverPic},content=#{content},content_source_url=#{contentSourceUrl},create_time=#{createTime}
+        WHERE id=#{id} ;
+    </update>
+    <update id="editNewsContentSourceUrl" parameterType="com.wechat.entity.News">
+        UPDATE wechat_material_news
+        SET content_source_url=#{contentSourceUrl}
+        WHERE id=#{id} ;
+    </update>
+    <insert id="addNews" parameterType="com.wechat.entity.News" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wechat_material_news (title,account_name,thumb_id,media_id,author,digest,show_cover_pic,content,content_source_url,create_time)
+        VALUES (#{title},#{accountName},#{thumbId},#{mediaId},#{author},#{digest},#{showCoverPic},#{content},#{contentSourceUrl},#{createTime});
+    </insert>
+    <delete id="deleteNews" parameterType="com.wechat.entity.News">
+        DELETE FROM wechat_material_news WHERE id=#{id} and account_name=#{accountName};
+    </delete>
+</mapper>

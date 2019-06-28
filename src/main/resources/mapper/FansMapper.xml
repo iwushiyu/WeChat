@@ -1,0 +1,61 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.FansDAO">
+    <resultMap type="com.wechat.entity.Fans" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="subscribe_status" property="subscribeStatus"/>
+        <!--column为数据库表的属性，property为类的属性-->
+        <result column="open_id" property="openId"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="sex" property="sex"/>
+        <result column="language" property="language"/>
+        <result column="account" property="account"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="country" property="country"/>
+        <result column="subscribe_time" property="subscribeTime"/>
+        <result column="head_image_url" property="headImgUrl"/>
+    </resultMap>
+
+    <select id="allFnas" resultMap="BaseMap" parameterType="java.lang.String">
+        select * from wechat_account_fans where account=#{account};
+    </select>
+    <insert id="addFans" parameterType="com.wechat.entity.Fans">
+         INSERT INTO wechat_account_fans
+        (subscribe_status,open_id,nick_name,sex,language,account,province,city,country,subscribe_time,head_image_url)
+    VALUES(#{subscribeStatus},#{openId},#{nickName},#{sex},#{language},#{account},#{province},#{city},#{country},#{subscribeTime},#{headImgUrl})
+    </insert>
+    <select id="search" resultMap="BaseMap" parameterType="com.wechat.entity.Fans">
+        -- 实现模糊查询
+        SELECT * from wechat_account_fans where nick_name LIKE concat(concat('%',#{nickName}),'%') and account=#{account};
+    </select>
+    <select id="selectFans" resultMap="BaseMap" parameterType="com.wechat.entity.Fans">
+        select * from wechat_account_fans where open_id=#{openId} and account=#{account};
+    </select>
+    <update id="updateFans" parameterType="com.wechat.entity.Fans">
+        UPDATE wechat_account_fans SET subscribe_status=#{subscribeStatus},open_id=#{openId},
+        nick_name=#{nickName},sex=#{sex},language=#{language},account=#{account} ,
+        province=#{province},city=#{city},country=#{country},head_image_url=#{headImgUrl},subscribe_time=#{subscribeTime}
+         WHERE open_id = #{openId} and account=#{account};
+    </update>
+    <delete id="deleteFans" parameterType="com.wechat.entity.Fans">
+        DELETE FROM wechat_account_fans WHERE open_id=#{openId} and account=#{account};
+    </delete>
+
+    <insert id="add" parameterType="com.wechat.entity.Fans" useGeneratedKeys="true" keyProperty="id">
+         INSERT INTO wechat_account_fans
+        (subscribe_status,open_id,nick_name,sex,language,account,province,city,country,subscribe_time,head_image_url)
+    VALUES(#{subscribeStatus},#{openId},#{nickName},#{sex},#{language},#{account},#{province},#{city},#{country},#{subscribeTime},#{headImgUrl})
+    </insert>
+
+    <select id="getByOpenId" parameterType="java.lang.String" resultMap="BaseMap">
+        SELECT * FROM wechat_account_fans WHERE open_id = #{openId}
+    </select>
+
+    <update id="update" parameterType="com.wechat.entity.Fans">
+        UPDATE wechat_account_fans SET nick_name = #{nickName},sex = #{sex},country = #{country},province = #{province},city = #{city} WHERE open_id = #{openId}
+    </update>
+
+</mapper>

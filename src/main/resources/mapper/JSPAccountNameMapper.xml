@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.JSPAccountNameDAO">
+    <resultMap type="com.wechat.entity.JSPAccountName" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="name" property="accountName"/>
+    </resultMap>
+    <select id="select" resultMap="BaseMap">
+        select * from account_name where id=1;
+    </select>
+    <insert id="add" parameterType="java.lang.String">
+        INSERT INTO account_name (name) VALUES(#{jspAccountName});
+    </insert>
+    <update id="edit" parameterType="java.lang.String">
+        UPDATE account_name SET name = #{jspAccountName} WHERE id =1;
+    </update>
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM account_name WHERE name=#{jspAccountName};
+    </delete>
+</mapper>

@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.ImagesDAO">
+    <resultMap type="com.wechat.entity.Image" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="image_name" property="imageName"/>
+        <result column="account_name" property="accountName"/>
+        <result column="media_id" property="mediaId"/>
+        <result column="picture_url" property="picUrl"/>
+        <result column="img_url" property="imgUrl"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectAllImages" resultMap="BaseMap" parameterType="java.lang.String">
+        SELECT * FROM wechat_material_img
+        WHERE account_name=#{accountName} ORDER BY id DESC;
+    </select>
+    <select id="selectImagesByImageID" resultMap="BaseMap"  parameterType="com.wechat.entity.Image">
+        SELECT * FROM wechat_material_img
+        WHERE id=#{id};
+    </select>
+    <update id="editImage" parameterType="com.wechat.entity.Image">
+        UPDATE wechat_material_img SET image_name=#{imageName},create_time=#{createTime} WHERE id=#{id} and account_name=#{accountName};
+    </update>
+    <insert id="addImage" parameterType="com.wechat.entity.Image" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wechat_material_img (image_name,account_name,picture_url,img_url,media_id,create_time) VALUES (#{imageName},#{accountName},#{picUrl},#{imgUrl},#{mediaId},#{createTime});
+    </insert>
+    <delete id="deleteImage" parameterType="com.wechat.entity.Image">
+        DELETE FROM wechat_material_img WHERE id=#{id} and account_name=#{accountName};
+    </delete>
+</mapper>

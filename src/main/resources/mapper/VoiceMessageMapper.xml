@@ -1,0 +1,36 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.VoiceMessageDAO">
+    <resultMap type="com.wechat.entity.VoiceMessage" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="base_id" property="baseID"/>
+        <result column="voice_id" property="voiceID"/>
+        <!--column为数据库表的属性，property为类的属性-->
+        <association property="voice" javaType="com.wechat.entity.Voice">
+            <id column="id" property="id"/>
+            <result column="title" property="title"/>
+            <result column="media_id" property="mediaId"/>
+            <result column="description" property="description"/>
+            <result column="url" property="url"/>
+        </association>
+    </resultMap>
+
+    <select id="selectVoiceMessageByBaseId" resultMap="BaseMap" parameterType="java.lang.Integer">
+        SELECT voice_message.*,voice.`title`,voice.`description`,voice.`media_id`,voice.`url`
+        FROM wechat_message_voice voice_message
+        LEFT JOIN wechat_material_voice voice
+        ON voice_message.`voice_id`=voice.`id`
+         WHERE voice_message.base_id=#{baseID};
+    </select>
+    <update id="editVoiceMessage" parameterType="com.wechat.entity.VoiceMessage">
+        UPDATE wechat_message_voice SET voice_id=#{voiceID} WHERE base_id=#{baseID};
+    </update>
+    <insert id="addVoiceMessage" parameterType="com.wechat.entity.VoiceMessage" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wechat_message_voice (base_id,voice_id) VALUES (#{baseID},#{voiceID});
+    </insert>
+    <delete id="deleteVoiceMessage" parameterType="com.wechat.entity.BaseMessage">
+        DELETE FROM wechat_message_voice WHERE base_id=#{id};
+    </delete>
+</mapper>

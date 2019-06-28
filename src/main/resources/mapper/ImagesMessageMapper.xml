@@ -1,0 +1,37 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.ImagesMessageDAO">
+    <resultMap type="com.wechat.entity.ImagesMessage" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="image_id" property="imageId"/>
+        <result column="base_id" property="baseId"/>
+        <!--column为数据库表的属性，property为类的属性-->
+        <association property="image" javaType="com.wechat.entity.Image">
+            <id column="id" property="id"/>
+            <result column="image_name" property="imageName"/>
+            <result column="account_name" property="accountName"/>
+            <result column="media_id" property="mediaId"/>
+            <result column="picture_url" property="picUrl"/>
+            <result column="create_time" property="createTime"/>
+        </association>
+    </resultMap>
+
+    <select id="selectImageMessage"  resultMap="BaseMap" parameterType="java.lang.Integer">
+   SELECT img_message.*,img.`image_name`,img.`picture_url`,img.`media_id`
+        FROM wechat_message_img img_message
+        LEFT JOIN wechat_material_img img
+        ON img_message.`image_id`=img.`id`
+         WHERE img_message.base_id=#{baseMessageID};
+    </select>
+    <update id="editImageMessage" parameterType="com.wechat.entity.ImagesMessage">
+        UPDATE wechat_message_img SET image_id=#{imageId} WHERE base_id=#{baseId};
+    </update>
+    <insert id="addImageMessage" parameterType="com.wechat.entity.ImagesMessage" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wechat_message_img (base_id,image_id) VALUES (#{baseId},#{imageId});
+    </insert>
+    <delete id="deleteImageMessage" parameterType="com.wechat.entity.BaseMessage">
+        DELETE FROM wechat_message_img WHERE base_id=#{id};
+    </delete>
+</mapper>

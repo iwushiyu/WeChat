@@ -1,0 +1,50 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.AccountDAO">
+    <resultMap type="com.wechat.entity.Account" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="account" property="account"/>
+        <result column="appid" property="appid"/>
+        <result column="appsecret" property="appsecret"/>
+        <result column="url" property="url"/>
+        <result column="token" property="token"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="allAccount" resultMap="BaseMap" parameterType="java.lang.String">
+        select wechat_account.*
+        from wechat_account,system_user,user_account
+        where system_user.username=#{username}
+        and system_user.id=user_account.user_id
+        and wechat_account.id=user_account.account_id;
+    </select>
+    <select id="all" resultMap="BaseMap" >
+        select wechat_account.*
+        from wechat_account
+    </select>
+    <insert id="addAccount" parameterType="com.wechat.entity.Account" useGeneratedKeys="true" keyProperty="id">
+        insert into wechat_account (name,account,appid,appsecret,url,token,create_time)
+        values(#{name},#{account},#{appid},#{appsecret},#{url},#{token},#{createTime})
+    </insert>
+    <select id="selectAccount"  resultMap="BaseMap"  parameterType="java.lang.String" >
+    select * from wechat_account where name=#{accountName};
+    </select>
+    <select id="selectAccountByAccount"  resultMap="BaseMap"  parameterType="java.lang.String" >
+    select * from wechat_account where account=#{account};
+    </select>
+    <update id="editAccount" parameterType="com.wechat.entity.Account">
+        UPDATE wechat_account
+        SET NAME=#{name}, account=#{account},appid=#{appid},appsecret=#{appsecret},create_time=#{createTime}
+        WHERE url=#{url} and token=#{token}
+    </update>
+    <delete id="deleteAccount" parameterType="com.wechat.entity.Account">
+        DELETE FROM wechat_account WHERE url=#{url} and token=#{token};
+    </delete>
+    <select id="getByName"  resultMap="BaseMap"  parameterType="java.lang.String" >
+        select * from wechat_account where name=#{accountName};
+    </select>
+
+</mapper>

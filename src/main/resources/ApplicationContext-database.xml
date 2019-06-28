@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!--配置Druid数据源连接池-->
+    <bean class="com.alibaba.druid.pool.DruidDataSource"
+          id="dataSource" init-method="init"
+          destroy-method="close">
+        <!--配置数据库连接-->
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--sql会话模板-->
+    <bean class="org.mybatis.spring.SqlSessionTemplate"
+          id="sessionTemplate" scope="prototype">
+        <constructor-arg ref = "sqlSessionFactory"/>
+    </bean>
+
+    <!--配置mybatis-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean"
+          id="sqlSessionFactory">
+        <!--spring特点：依赖注入/控制反转-->
+        <!--ref的值注入到property属性里面-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--找mybatis的配置文件-->
+        <property name="configLocation"
+                  value="classpath:mybatis-config.xml"/>
+        <!--mybatis 数据操作是写在xml文件里面的，映射文件,mapper.xml-->
+        <!--Student类  &#45;&#45;》StudentMapper.xml-->
+        <property name="mapperLocations"
+                  value="classpath*:/mapper/*Mapper.xml"/>
+    </bean>
+
+    <!--配置mybatis的自动扫描-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.wechat.dao"/>
+        <property name="sqlSessionFactoryBeanName"
+                  value="sqlSessionFactory"/>
+    </bean>
+
+</beans>

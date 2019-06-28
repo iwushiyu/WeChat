@@ -1,0 +1,67 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.NewsMessageDAO">
+    <!--<resultMap type="com.wechat.entity.NewsMessage" id="BaseMap">-->
+        <!--<id column="id" property="id"/>-->
+        <!--<result column="MsgType" property="MsgType"/>-->
+        <!--<result column="InputCode" property="InputCode"/>-->
+        <!--&lt;!&ndash;column为数据库表的属性，property为类的属性&ndash;&gt;-->
+        <!--<result column="Title" property="Title"/>-->
+        <!--<result column="Content" property="Content"/>-->
+        <!--<result column="Account" property="Account"/>-->
+        <!--<result column="createTime" property="createTime"/>-->
+    <!--</resultMap>-->
+    <resultMap type="com.wechat.entity.NewsMessage" id="msgNewsMap">
+        <id column="id" property="id"/>
+        <result column="news_id" property="newsId"/>
+        <result column="base_id" property="baseId"/>
+        <!-- 配置一对多关联映射 -->
+
+
+        <!--<collection property="Articles" column="" ofType="com.wechat.entity.News">-->
+            <!--<id property="id" column="news_id"/>-->
+            <!--<result property="Title" column="title" />-->
+            <!--<result property="Description" column="description" />-->
+            <!--<result property="picUrl" column="picUrl" />-->
+            <!--<result property="Url" column="contentSourceUrl" />-->
+        <!--</collection>-->
+    </resultMap>
+
+    <!--<select id="selectNewsMessage" resultMap="msgNewsMap" parameterType="com.wechat.entity.BaseMessage">-->
+<!--SELECT-->
+	<!--n.id AS id,-->
+	<!--news.id AS news_id,-->
+	<!--news.Title,-->
+	<!--news.Description,-->
+	<!--news.picUrl,-->
+	<!--news.Url-->
+<!--FROM news-->
+<!--LEFT JOIN wechat_message_news n-->
+<!--ON news.NewsMessageID=n.id WHERE n.base_id=#{id}-->
+    <!--</select>-->
+
+    <!--<delete id="deleteNewsMessage" parameterType="com.wechat.entity.BaseMessage">-->
+        <!--DELETE FROM wechat_message_news WHERE base_id=#{id};-->
+    <!--</delete>-->
+
+
+
+    <select id="selectNewsMessage" resultMap="msgNewsMap" parameterType="java.lang.Integer">
+        SELECT *
+        FROM wechat_message_news
+        WHERE wechat_message_news.base_id=#{baseMessageID};
+    </select>
+    <update id="editNewsMessage" parameterType="com.wechat.entity.NewsMessage">
+        UPDATE wechat_message_news SET news_id=#{newsId} WHERE base_id=#{baseId};
+    </update>
+    <insert id="addNewsMessage" parameterType="com.wechat.entity.NewsMessage" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wechat_message_news (base_id,news_id) VALUES (#{baseId},#{newsId});
+    </insert>
+    <delete id="deleteNewsMessage" parameterType="com.wechat.entity.BaseMessage">
+        DELETE FROM wechat_message_news WHERE base_id=#{id};
+    </delete>
+
+
+</mapper>

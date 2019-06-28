@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.RoleDAO">
+       <!--<resultMap type="com.wechat.entity.Account" id="BaseMap">-->
+    <!--<id column="id" property="id"/>-->
+    <!--<result column="name" property="name"/>-->
+    <!--&lt;!&ndash;column为数据库表的属性，property为类的属性&ndash;&gt;-->
+    <!--<result column="account" property="account"/>-->
+    <!--<result column="appid" property="appid"/>-->
+    <!--<result column="appsecret" property="appsecret"/>-->
+    <!--<result column="url" property="url"/>-->
+    <!--<result column="token" property="token"/>-->
+    <!--<result column="create_time" property="create_time"/>-->
+    <!--</resultMap>-->
+
+    <!--<select id="all" resultMap="BaseMap">-->
+        <!--select * from wechat_account-->
+    <!--</select>-->
+    <!--<insert id="addAccount" parameterType="com.wechat.entity.Account">-->
+        <!--insert into wechat_account (NAME,account,appid,appsecret,url,token,create_time) values(#{name},#{account},#{appid},#{appsecret},#{url},#{token},#{create_time})-->
+    <!--</insert>-->
+    <select id="selectRole" resultType="com.wechat.entity.Role"  parameterType="com.wechat.entity.SystemUser" >
+    select system_role.id,system_role.role_name,system_role.role_describe,system_role.create_time from system_user,system_role where system_user.id=#{id} and system_user.role_id=system_role.id;
+    </select>
+    <!--<update id="editAccount" parameterType="com.wechat.entity.Account">-->
+        <!--UPDATE wechat_account SET NAME=#{name}, account=#{account},appid=#{appid},appsecret=#{appsecret} WHERE url=#{url} and token=#{token}-->
+    <!--</update>-->
+    <!--<delete id="deleteAccount" parameterType="com.wechat.entity.Account">-->
+        <!--DELETE FROM wechat_account WHERE url=#{url} and token=#{token};-->
+    <!--</delete>-->
+</mapper>

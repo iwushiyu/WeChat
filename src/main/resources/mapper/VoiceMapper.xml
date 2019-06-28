@@ -1,0 +1,34 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.VoiceDAO">
+    <resultMap type="com.wechat.entity.Voice" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="voice_name" property="voiceName"/>
+        <result column="account_name" property="accountName"/>
+        <result column="media_id" property="mediaId"/>
+        <result column="url" property="url"/>
+        <result column="description" property="description"/>
+        <result column="title" property="title"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectAllVoice"  resultMap="BaseMap" parameterType="java.lang.String">
+        SELECT * FROM wechat_material_voice
+        WHERE account_name=#{accountName} ORDER BY id DESC;
+    </select>
+    <select id="selectVoiceByVoiceID" resultMap="BaseMap" parameterType="com.wechat.entity.Voice">
+        SELECT * FROM wechat_material_voice
+        WHERE id=#{id};
+    </select>
+    <update id="editVoice" parameterType="com.wechat.entity.Voice">
+        UPDATE wechat_material_voice SET title=#{title},description=#{description},create_time=#{createTime} WHERE id=#{id} and account_name=#{accountName};
+    </update>
+    <insert id="addVoice" parameterType="com.wechat.entity.Voice" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wechat_material_voice (voice_name,title,account_name,media_id,description,url,create_time) VALUES (#{voiceName},#{title},#{accountName},#{mediaId},#{description},#{url},#{createTime});
+    </insert>
+    <delete id="deleteVoice" parameterType="com.wechat.entity.Voice">
+        DELETE FROM wechat_material_voice WHERE id=#{id} and account_name=#{accountName};
+    </delete>
+</mapper>

@@ -1,0 +1,32 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.SystemMenuDAO">
+    <resultMap type="com.wechat.entity.SystemMenu" id="BaseMap">
+    <id column="id" property="id"/>
+    <result column="menu_name" property="menuName"/>
+    <!--column为数据库表的属性，property为类的属性-->
+    <result column="father_id" property="fatherID"/>
+    <result column="child_catalog" property="childCatalog"/>
+    <result column="menu_describe" property="menuDescribe"/>
+    </resultMap>
+
+    <select id="selectSystemMenu" resultMap="BaseMap"  parameterType="com.wechat.entity.Role">
+        select system_menu.id,system_menu.menu_name,system_menu.father_id,system_menu.child_catalog,system_menu.menu_describe
+        from system_menu,system_role_menu
+        where system_role_menu.role_id=#{id}
+        AND system_role_menu.menu_id=system_menu.id
+        ORDER BY id;
+    </select>
+    <insert id="addSystemMenu" parameterType="com.wechat.entity.SystemMenu">
+        INSERT INTO system_menu (id,menu_name,father_id,menu_describe)
+        VALUES(#{id},#{menuName},#{fatherID},#{menuDescribe});
+    </insert>
+    <!--<delete id="deleteBaseMessage" parameterType="com.wechat.entity.SystemMenu">-->
+        <!--DELETE FROM system_menu WHERE id=#{id};-->
+    <!--</delete>-->
+    <!--<update id="updateBaseMessage" parameterType="com.wechat.entity.SystemMenu">-->
+        <!--UPDATE message SET menuName = #{menuName} WHERE id = #{id}-->
+    <!--</update>-->
+</mapper>

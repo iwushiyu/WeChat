@@ -1,0 +1,44 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.BaseMessageDAO">
+    <resultMap type="com.wechat.entity.BaseMessage" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="message_type" property="msgType"/>
+        <result column="input_code" property="inputCode"/>
+        <!--column为数据库表的属性，property为类的属性-->
+        <result column="account" property="accountName"/>
+        <result column="title" property="title"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectAllBaseMessage" resultMap="BaseMap" parameterType="java.lang.String">
+        select * from wechat_message where account=#{accountName};
+    </select>
+    <select id="selectBaseMessage" resultMap="BaseMap" parameterType="com.wechat.entity.BaseMessage">
+        select * from wechat_message where input_code=#{inputCode} and message_type=#{msgType} and createTime=#{createTime} and account=#{accountName};
+    </select>
+    <select id="getByBaseID" resultMap="BaseMap" parameterType="java.lang.Integer">
+        select * from wechat_message where id=#{baseID};
+    </select>
+    <select id="getByInputCode" resultMap="BaseMap" parameterType="com.wechat.entity.BaseMessage">
+        select * from wechat_message where input_code=#{inputCode} and account=#{accountName};
+    </select>
+    <select id="getByMsgType" resultMap="BaseMap" parameterType="com.wechat.entity.BaseMessage">
+       SELECT * FROM wechat_message WHERE message_type=#{msgType} and account=#{accountName};
+    </select>
+    <select id="search" resultMap="BaseMap" parameterType="com.wechat.entity.BaseMessage">
+        -- 实现模糊查询
+        SELECT * from wechat_message where input_code LIKE concat(concat('%',#{inputCode}),'%') and account=#{accountName};
+    </select>
+    <insert id="addBaseMessage" parameterType="com.wechat.entity.BaseMessage"  useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wechat_message (account,title,input_code,message_type,create_time) VALUES(#{accountName},#{title},#{inputCode},#{msgType},#{createTime});
+    </insert>
+    <delete id="deleteBaseMessage" parameterType="com.wechat.entity.BaseMessage">
+        DELETE FROM wechat_message WHERE id=#{id};
+    </delete>
+    <update id="updateBaseMessage" parameterType="com.wechat.entity.BaseMessage">
+        UPDATE wechat_message SET input_code = #{inputCode}, title = #{title}, create_time = #{createTime} WHERE id = #{id}
+    </update>
+</mapper>

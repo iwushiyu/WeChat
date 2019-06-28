@@ -1,0 +1,23 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.MusicMessageDAO">
+    <resultMap type="com.wechat.entity.MusicMessage" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="message_type" property="msgType"/>
+        <result column="input_code" property="inputCode"/>
+        <!--column为数据库表的属性，property为类的属性-->
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="music_url" property="musicUrl"/>
+        <result column="hq_music_url" property="hqMusicUrl"/>
+        <result column="thumbmediaid" property="thumbmediaId"/>
+        <result column="account" property="account"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectMusicMessage" resultType="com.wechat.entity.Music" parameterType="com.wechat.entity.BaseMessage">
+       select * from wechat_message_music music where music.base_id=#{id};
+    </select>
+</mapper>

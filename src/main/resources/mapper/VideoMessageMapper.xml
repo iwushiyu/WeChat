@@ -1,0 +1,36 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.VideoMessageDAO">
+    <resultMap type="com.wechat.entity.VideoMessage" id="BaseMap">
+    <id column="id" property="id"/>
+    <result column="base_id" property="baseID"/>
+    <result column="video_id" property="videoID"/>
+    <!--column为数据库表的属性，property为类的属性-->
+        <association property="video" javaType="com.wechat.entity.Video">
+            <id column="id" property="id"/>
+            <result column="title" property="title"/>
+            <result column="media_id" property="mediaId"/>
+            <result column="description" property="description"/>
+            <result column="url" property="url"/>
+        </association>
+</resultMap>
+
+    <select id="selectVideoMessage" resultMap="BaseMap" parameterType="java.lang.Integer">
+        SELECT video_message.*,video.`title`,video.`description`,video.`media_id`,video.`url`
+        FROM wechat_message_video video_message
+        LEFT JOIN wechat_material_video video
+        ON video_message.`video_id`=video.`id`
+         WHERE video_message.base_id=#{baseMessageID};
+    </select>
+    <update id="editVideoMessage" parameterType="com.wechat.entity.VideoMessage">
+        UPDATE wechat_message_video SET video_id=#{videoID} WHERE base_id=#{baseID};
+    </update>
+    <insert id="addVideoMessage" parameterType="com.wechat.entity.VideoMessage" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wechat_message_video (base_id,video_id) VALUES (#{baseID},#{videoID});
+    </insert>
+    <delete id="deleteVideoMessage" parameterType="com.wechat.entity.BaseMessage">
+        DELETE FROM wechat_message_video WHERE base_id=#{id};
+    </delete>
+</mapper>

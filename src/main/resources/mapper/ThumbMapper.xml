@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wechat.dao.ThumbDAO">
+    <resultMap type="com.wechat.entity.Thumb" id="BaseMap">
+        <id column="id" property="id"/>
+        <result column="thumb_name" property="thumbName"/>
+        <result column="account_name" property="accountName"/>
+        <result column="media_id" property="mediaId"/>
+        <result column="thumb_url" property="thumbURL"/>
+        <result column="img_url" property="imgURL"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectAllThumbs"  resultMap="BaseMap" parameterType="java.lang.String">
+        SELECT * FROM wechat_material_thumb
+        WHERE account_name=#{accountName} ORDER BY id DESC;
+    </select>
+    <select id="selectThumbByThumbID" resultMap="BaseMap" parameterType="com.wechat.entity.Thumb">
+        SELECT * FROM wechat_material_thumb
+        WHERE id=#{id};
+    </select>
+    <update id="editThumb" parameterType="com.wechat.entity.Thumb">
+        UPDATE wechat_material_thumb SET thumb_name=#{thumbName},create_time=#{createTime} WHERE id=#{id} and account_name=#{accountName};
+    </update>
+    <insert id="addThumb" parameterType="com.wechat.entity.Thumb"  useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wechat_material_thumb (thumb_name,account_name,media_id,thumb_url,img_url,create_time) VALUES (#{thumbName},#{accountName},#{mediaId},#{thumbURL},#{imgURL},#{createTime});
+    </insert>
+    <delete id="deleteThumb" parameterType="com.wechat.entity.Thumb">
+        DELETE FROM wechat_material_thumb WHERE id=#{id} and account_name=#{accountName};
+    </delete>
+</mapper>
